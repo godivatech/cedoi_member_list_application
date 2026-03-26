@@ -207,7 +207,7 @@ export const AdminDashboard: React.FC = () => {
                     </div>
                     <div className="md:col-span-2">
                       <span className="block text-xs font-bold text-text-secondary uppercase tracking-tight">Address</span>
-                      <span className="text-sm">{item.address}</span>
+                      <span className="text-sm leading-relaxed whitespace-pre-wrap">{item.address}</span>
                     </div>
                   </div>
                   
