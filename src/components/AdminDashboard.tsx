@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { getWebsiteFormSubmissions } from '../lib/firebase';
+import type { MemberApplication } from '../lib/firebase';
 import { cn } from '../lib/utils';
 import { Card } from './ui/Card';
 import { Button } from './ui/Button';
 import { Spinner } from './ui/Spinner';
 import { Input } from './ui/Input';
-import { Download, Search, ExternalLink, Calendar, Lock, LogOut, X } from 'lucide-react';
+import { Download, Search, Lock, LogOut, X, Edit2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ProfileCard } from './ui/ProfileCard';
+import { EditBusinessForm } from './EditBusinessForm';
 
 export const AdminDashboard: React.FC = () => {
-  const [submissions, setSubmissions] = useState<any[]>([]);
+  const [submissions, setSubmissions] = useState<MemberApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [selectedItem, setSelectedItem] = useState<MemberApplication | null>(null);
+  const [editingItem, setEditingItem] = useState<MemberApplication | null>(null);
+  const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
 
   useEffect(() => {
     const savedAuth = localStorage.getItem('admin_authorized');
@@ -61,6 +66,7 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const exportToExcel = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const exportData = submissions.map(({ id, submittedAt, ...rest }) => ({
       ...rest,
       submittedAt: submittedAt?.toDate ? submittedAt.toDate().toLocaleString() : 'N/A'
@@ -70,6 +76,15 @@ export const AdminDashboard: React.FC = () => {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Submissions");
     XLSX.writeFile(workbook, `Business_Listing_Export_${new Date().toLocaleDateString()}.xlsx`);
+  };
+
+  const handleShare = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const shareUrl = `${window.location.origin}/share/${id}`;
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setShowCopyTooltip(id);
+      setTimeout(() => setShowCopyTooltip(null), 2000);
+    });
   };
 
   const filteredData = submissions.filter(s =>
@@ -178,79 +193,26 @@ export const AdminDashboard: React.FC = () => {
           <div className="text-center py-12 text-text-secondary">No submissions found.</div>
         ) : (
           filteredData.map((item) => (
-            <Card
-              key={item.id}
-              className="p-4 md:p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white border border-gray-100 rounded-2xl relative group overflow-hidden cursor-pointer"
-              onClick={() => setSelectedItem(item)}
-            >
-              <div className="flex flex-row items-start justify-between gap-4 md:gap-6">
-
-                {/* Left Side: Information */}
-                <div className="flex flex-col flex-1 min-w-0 pr-2 md:pr-4">
-                  <div className="mb-2 md:mb-3">
-                    <h3
-                      className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight leading-tight mb-1.5 line-clamp-2 break-words"
-                      title={item.businessName}
-                    >
-                      {item.businessName}
-                    </h3>
-                    <div className="w-full">
-                      <span
-                        className="inline-block max-w-[95%] truncate px-2.5 py-1 md:px-3 md:py-1 bg-primary/10 text-primary rounded-full text-[10px] md:text-xs font-bold tracking-wide uppercase align-top"
-                        title={item.category}
-                      >
-                        {item.category}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="space-y-1.5 md:space-y-2.5 mt-1 text-[11px] md:text-sm text-gray-600">
-                    <div className="flex items-start">
-                      <span className="w-14 md:w-20 shrink-0 text-gray-400 font-medium pt-0.5">Name</span>
-                      <span className="font-semibold text-gray-800 line-clamp-1 break-words flex-1 min-w-0 pt-0.5" title={item.name}>{item.name}</span>
-                    </div>
-                    <div className="flex items-start">
-                      <span className="w-14 md:w-20 shrink-0 text-gray-400 font-medium">Phone</span>
-                      <span className="font-bold text-gray-800 truncate flex-1 min-w-0">{item.phone}</span>
-                    </div>
-                    <div className="flex items-start">
-                      <span className="w-14 md:w-20 shrink-0 text-gray-400 font-medium">Service</span>
-                      <span className="font-medium text-gray-600 leading-snug line-clamp-2 md:line-clamp-3 break-words flex-1 min-w-0" title={item.service}>{item.service}</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-3 md:pt-5 mt-auto">
-                    <div className="flex items-center text-[10px] md:text-xs text-gray-400 font-medium border-t border-gray-100 pt-3">
-                      <Calendar size={12} className="mr-1.5 shrink-0" />
-                      <span className="truncate">{item.submittedAt?.toDate ? item.submittedAt.toDate().toLocaleDateString() : 'N/A'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Side: Square Image (Swiggy/Food Menu Style) */}
-                <div className="shrink-0 flex flex-col items-center w-[100px] md:w-[140px] relative pb-2 md:pb-3">
-                  <div className="w-full aspect-square rounded-full overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.02] border border-gray-100">
-                    {item.photoUrl ? (
-                      <img src={item.photoUrl} alt={item.businessName} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-gray-400 text-[10px] md:text-xs font-semibold uppercase tracking-wider block text-center leading-tight">No<br />Image</span>
-                    )}
-                  </div>
-                  {item.photoUrl && (
-                    <a
-                      href={item.photoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="absolute -bottom-2 md:-bottom-1 left-1/2 -translate-x-1/2 px-4 py-1.5 md:px-6 md:py-2 rounded-xl bg-white border border-gray-200 text-green-600 text-[10px] md:text-xs font-extrabold flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.08)] hover:shadow-md hover:border-green-200 transition-all z-10 whitespace-nowrap"
-                    >
-                      VIEW <ExternalLink size={12} className="ml-1" />
-                    </a>
-                  )}
-                </div>
-
-              </div>
-            </Card>
+            <div key={item.id} className="relative">
+              <ProfileCard
+                item={item}
+                onClick={() => setSelectedItem(item)}
+                onShare={(e) => handleShare(e, item.id)}
+                showShare={true}
+              />
+              <AnimatePresence>
+                {showCopyTooltip === item.id && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute top-2 right-2 bg-primary text-white text-[10px] px-2 py-1 rounded-md font-bold z-50 pointer-events-none"
+                  >
+                    LINK COPIED!
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           ))
         )}
       </div>
@@ -272,16 +234,28 @@ export const AdminDashboard: React.FC = () => {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
             >
-              <button
-                onClick={() => setSelectedItem(null)}
-                className={cn(
-                  "absolute top-4 right-4 z-10 p-2 rounded-full transition-colors",
-                  selectedItem.photoUrl ? "bg-black/20 hover:bg-black/40 text-white backdrop-blur-md" : "bg-gray-100 hover:bg-gray-200 text-gray-600"
-                )}
-                aria-label="Close modal"
-              >
-                <X size={20} />
-              </button>
+              <div className="absolute top-4 right-4 z-10 flex gap-2">
+                <button
+                  onClick={() => {
+                    setEditingItem(selectedItem);
+                    setSelectedItem(null);
+                  }}
+                  className="p-2 rounded-full bg-white/90 hover:bg-white text-primary shadow-sm backdrop-blur-md transition-colors"
+                  title="Edit member"
+                >
+                  <Edit2 size={20} />
+                </button>
+                <button
+                  onClick={() => setSelectedItem(null)}
+                  className={cn(
+                    "p-2 rounded-full transition-colors",
+                    selectedItem.photoUrl ? "bg-black/20 hover:bg-black/40 text-white backdrop-blur-md" : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+                  )}
+                  aria-label="Close modal"
+                >
+                  <X size={20} />
+                </button>
+              </div>
 
               <div className="flex-1 overflow-y-auto w-full">
                 {selectedItem.photoUrl && (
@@ -326,6 +300,33 @@ export const AdminDashboard: React.FC = () => {
                   </div>
                 </div>
               </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Form Modal */}
+      <AnimatePresence>
+        {editingItem && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setEditingItem(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden"
+            >
+              <EditBusinessForm
+                item={editingItem}
+                onClose={() => setEditingItem(null)}
+                onUpdate={fetchData}
+              />
             </motion.div>
           </div>
         )}
