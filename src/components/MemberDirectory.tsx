@@ -22,7 +22,18 @@ export const MemberDirectory: React.FC = () => {
     setLoading(true);
     try {
       const data = await getWebsiteFormSubmissions('member-applications');
-      setSubmissions(data);
+      // Sort: godiva first
+      const sortedData = [...data].sort((a, b) => {
+        const nameA = a.businessName?.toLowerCase() || '';
+        const nameB = b.businessName?.toLowerCase() || '';
+        const isAGodiva = nameA.includes('godiva');
+        const isBGodiva = nameB.includes('godiva');
+        
+        if (isAGodiva && !isBGodiva) return -1;
+        if (!isAGodiva && isBGodiva) return 1;
+        return 0;
+      });
+      setSubmissions(sortedData);
     } catch (error) {
       console.error('Fetch error:', error);
     } finally {
