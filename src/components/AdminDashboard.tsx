@@ -229,7 +229,7 @@ export const AdminDashboard: React.FC = () => {
 
                 {/* Right Side: Square Image (Swiggy/Food Menu Style) */}
                 <div className="shrink-0 flex flex-col items-center w-[100px] md:w-[140px] relative pb-2 md:pb-3">
-                  <div className="w-full aspect-square rounded-2xl overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.02] border border-gray-100">
+                  <div className="w-full aspect-square rounded-full overflow-hidden shadow-sm bg-gray-50 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.02] border border-gray-100">
                     {item.photoUrl ? (
                       <img src={item.photoUrl} alt={item.businessName} className="w-full h-full object-cover" />
                     ) : (
