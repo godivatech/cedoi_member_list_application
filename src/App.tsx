@@ -56,7 +56,7 @@ function App() {
               rel="noopener noreferrer" 
               className="text-primary hover:underline font-bold"
             >
-              GODIVATECH
+              GODIVA TECH
             </a>
           </div>
         </footer>
