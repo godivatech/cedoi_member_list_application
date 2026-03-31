@@ -177,51 +177,60 @@ export const AdminDashboard: React.FC = () => {
           <div className="text-center py-12 text-text-secondary">No submissions found.</div>
         ) : (
           filteredData.map((item) => (
-            <Card key={item.id} className="p-0 overflow-hidden hover:border-primary/30 transition-colors bg-white">
-              <div className="flex flex-col md:flex-row">
-                {item.photoUrl && (
-                  <div className="w-full md:w-48 h-48 md:h-auto shrink-0 bg-background-secondary border-b md:border-b-0 md:border-r border-border">
-                    <img src={item.photoUrl} alt={item.businessName} className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <div className="p-5 flex-grow">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <h3 className="text-lg font-bold text-text-primary">{item.businessName}</h3>
-                      <p className="text-primary font-medium text-sm">{item.category}</p>
-                    </div>
-                    <div className="text-right text-xs text-text-secondary flex items-center gap-1">
-                      <Calendar size={12} />
-                      {item.submittedAt?.toDate ? item.submittedAt.toDate().toLocaleDateString() : 'N/A'}
-                    </div>
+            <Card key={item.id} className="p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white border border-gray-100 rounded-2xl relative group overflow-hidden">
+              <div className="flex flex-col-reverse md:flex-row md:items-start justify-between gap-6">
+                
+                {/* Left Side: Information */}
+                <div className="flex flex-col flex-grow">
+                  <div className="mb-4">
+                    <h3 className="text-2xl font-bold text-gray-900 tracking-tight leading-tight mb-1">{item.businessName}</h3>
+                    <span className="inline-flex px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-bold tracking-wide uppercase">{item.category}</span>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-3 gap-x-6 mt-4">
-                    <div>
-                      <span className="block text-xs font-bold text-text-secondary uppercase tracking-tight">Owner</span>
-                      <span className="text-sm font-medium">{item.name}</span>
+                  <div className="space-y-3 mt-2 text-sm">
+                    <div className="flex items-start">
+                      <span className="w-20 shrink-0 text-gray-500 font-medium">Name</span>
+                      <span className="font-semibold text-gray-900">{item.name}</span>
                     </div>
-                    <div>
-                      <span className="block text-xs font-bold text-text-secondary uppercase tracking-tight">Phone</span>
-                      <span className="text-sm font-medium">{item.phone}</span>
+                    <div className="flex items-start">
+                      <span className="w-20 shrink-0 text-gray-500 font-medium">Phone</span>
+                      <span className="font-semibold text-gray-900">{item.phone}</span>
                     </div>
-                    <div className="md:col-span-2">
-                      <span className="block text-xs font-bold text-text-secondary uppercase tracking-tight">Address</span>
-                      <span className="text-sm leading-relaxed whitespace-pre-wrap">{item.address}</span>
+                    <div className="flex items-start">
+                      <span className="w-20 shrink-0 text-gray-500 font-medium">Address</span>
+                      <span className="font-medium text-gray-800 leading-relaxed whitespace-pre-wrap">{item.address}</span>
                     </div>
                   </div>
-                  
-                  <div className="mt-4 pt-4 border-t border-border flex justify-end">
+
+                  <div className="pt-6 mt-4">
+                    <div className="flex items-center text-xs text-gray-400 font-medium border-t border-gray-100 pt-4">
+                      <Calendar size={14} className="mr-1.5" />
+                      Submitted on {item.submittedAt?.toDate ? item.submittedAt.toDate().toLocaleDateString() : 'N/A'}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side: Circular Image */}
+                <div className="shrink-0 flex flex-col items-center justify-start self-center md:self-start">
+                  <div className="relative w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white shadow-md bg-gray-50 flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                    {item.photoUrl ? (
+                      <img src={item.photoUrl} alt={item.businessName} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-gray-400 text-xs font-semibold uppercase tracking-wider block text-center leading-tight">No<br/>Image</span>
+                    )}
+                  </div>
+                  {item.photoUrl && (
                     <a 
                       href={item.photoUrl} 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="text-primary text-xs font-bold flex items-center hover:underline"
+                      className="mt-4 px-4 py-1.5 rounded-full bg-gray-50 border border-gray-100 text-primary text-xs font-bold flex items-center hover:bg-primary/5 transition-colors shadow-sm"
                     >
-                      VIEW FULL IMAGE <ExternalLink size={12} className="ml-1" />
+                      VIEW IMAGE <ExternalLink size={12} className="ml-1.5" />
                     </a>
-                  </div>
+                  )}
                 </div>
+
               </div>
             </Card>
           ))
