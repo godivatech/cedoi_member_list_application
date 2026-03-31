@@ -50,10 +50,12 @@ function App() {
             <Routes>
               <Route path="/" element={
                 <div className="space-y-12">
-                  <Banner 
-                    imageSrc="/assets/banners/1.jpeg" 
-                    altText="Godiva Connect Banner"
-                  />
+                  <div className="max-w-xl mx-auto">
+                    <Banner 
+                      imageSrc="/assets/banners/1.jpeg" 
+                      altText="Godiva Connect Banner"
+                    />
+                  </div>
                   <BusinessForm />
                 </div>
               } />
