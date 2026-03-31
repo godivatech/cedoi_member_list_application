@@ -42,7 +42,8 @@ export const MemberDirectory: React.FC = () => {
   const filteredData = submissions.filter(s =>
     s.businessName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.category?.toLowerCase().includes(searchTerm.toLowerCase())
+    s.category?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.service?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) return <div className="min-h-[60vh] flex items-center justify-center"><Spinner size={40} /></div>;

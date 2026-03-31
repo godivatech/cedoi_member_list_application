@@ -35,7 +35,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onUpload, imageUrl, is
   return (
     <div className="w-full mb-6">
       <label className="label">{label || 'Business Photo'}</label>
-      <div 
+      <div
         className={cn(
           "relative w-full aspect-video rounded-airbnb-lg border-2 border-dashed border-border overflow-hidden flex flex-col items-center justify-center transition-all duration-200 bg-background-secondary",
           preview ? "border-solid border-primary/20 bg-primary/5" : "hover:border-primary/50"
@@ -45,7 +45,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onUpload, imageUrl, is
           <>
             <img src={preview} alt="Preview" className="w-full h-full object-cover" />
             <div className="absolute top-2 right-2 flex gap-2">
-              <button 
+              <button
                 onClick={handleRemove}
                 className="p-2 bg-white/90 backdrop-blur rounded-full shadow-soft text-text-secondary hover:text-red-500 transition-colors"
               >
@@ -62,7 +62,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onUpload, imageUrl, is
             )}
           </>
         ) : (
-          <div 
+          <div
             onClick={() => fileInputRef.current?.click()}
             className="cursor-pointer flex flex-col items-center gap-3 p-6 text-center"
           >

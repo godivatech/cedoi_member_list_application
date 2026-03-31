@@ -90,7 +90,8 @@ export const AdminDashboard: React.FC = () => {
   const filteredData = submissions.filter(s =>
     s.businessName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    s.phone?.includes(searchTerm)
+    s.phone?.includes(searchTerm) ||
+    s.service?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // --- LOGIN SCREEN ---
