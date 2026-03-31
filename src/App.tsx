@@ -11,9 +11,9 @@ function App() {
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white font-bold">
-                B
+                G
               </div>
-              <span className="font-bold text-xl text-text-primary tracking-tight">BusinessList</span>
+              <span className="font-bold text-xl text-text-primary tracking-tight">Godiva Connect</span>
             </Link>
             
             <nav className="flex items-center gap-4">
@@ -46,7 +46,7 @@ function App() {
 
         <footer className="max-w-xl mx-auto px-4 py-8 text-center pb-32">
           <p className="text-text-secondary text-sm">
-            &copy; {new Date().getFullYear()} BusinessList App.
+            &copy; {new Date().getFullYear()} Godiva Connect App.
           </p>
           <div className="mt-2 text-xs font-medium text-text-secondary tracking-wide">
             DESIGNED AND DEVELOPED BY{' '}

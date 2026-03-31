@@ -103,6 +103,7 @@ export const BusinessForm: React.FC = () => {
         <p className="text-text-secondary mt-2">Fill in the details to list your business</p>
       </div>
 
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
         <Card className="mb-4">
           <Controller
