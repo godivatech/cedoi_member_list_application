@@ -85,7 +85,7 @@ APP FEATURES
 * Business Name
 * Category (text + suggestions, no strict dropdown)
 * Phone (10 digit validation)
-* Address
+* Service description
 * Photo upload (camera enabled)
 
 2. Photo Upload UX:

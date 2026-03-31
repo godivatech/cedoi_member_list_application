@@ -18,7 +18,7 @@ const formSchema = z.object({
   businessName: z.string().min(2, 'Business name must be at least 2 characters'),
   category: z.string().min(2, 'Please select or enter a category'),
   phone: z.string().regex(/^\d{10}$/, 'Phone must be exactly 10 digits'),
-  address: z.string().min(5, 'Address must be at least 5 characters'),
+  service: z.string().min(3, 'Service description must be at least 3 characters'),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -161,17 +161,17 @@ export const BusinessForm: React.FC = () => {
           />
 
           <Controller
-            name="address"
+            name="service"
             control={control}
             render={({ field }) => (
               <div className="mb-2">
-                <label className="label">Business Address</label>
+                <label className="label">Service Description</label>
                 <textarea
                   {...field}
                   className="input-field min-h-[100px] resize-none"
-                  placeholder="Enter full address"
+                  placeholder="Describe your service"
                 />
-                {errors.address?.message && <p className="error-text">{errors.address?.message}</p>}
+                {errors.service?.message && <p className="error-text">{errors.service?.message}</p>}
               </div>
             )}
           />

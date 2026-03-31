@@ -214,8 +214,8 @@ export const AdminDashboard: React.FC = () => {
                       <span className="font-bold text-gray-800 truncate flex-1 min-w-0">{item.phone}</span>
                     </div>
                     <div className="flex items-start">
-                      <span className="w-14 md:w-20 shrink-0 text-gray-400 font-medium">Address</span>
-                      <span className="font-medium text-gray-600 leading-snug line-clamp-2 md:line-clamp-3 break-words flex-1 min-w-0" title={item.address}>{item.address}</span>
+                      <span className="w-14 md:w-20 shrink-0 text-gray-400 font-medium">Service</span>
+                      <span className="font-medium text-gray-600 leading-snug line-clamp-2 md:line-clamp-3 break-words flex-1 min-w-0" title={item.service}>{item.service}</span>
                     </div>
                   </div>
 
@@ -312,9 +312,9 @@ export const AdminDashboard: React.FC = () => {
                       <span className="font-semibold text-gray-900">{selectedItem.phone}</span>
                     </div>
                     <div>
-                      <span className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Full Address</span>
+                      <span className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Service Description</span>
                       <p className="font-medium text-gray-800 leading-relaxed whitespace-pre-wrap">
-                        {selectedItem.address}
+                        {selectedItem.service}
                       </p>
                     </div>
                     <div className="pt-2 border-t border-gray-100">
