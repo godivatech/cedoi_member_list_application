@@ -6,9 +6,10 @@ interface PhotoUploadProps {
   onUpload: (file: File) => void;
   imageUrl?: string;
   isLoading?: boolean;
+  label?: string;
 }
 
-export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onUpload, imageUrl, isLoading }) => {
+export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onUpload, imageUrl, isLoading, label }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(imageUrl || null);
 
@@ -33,7 +34,7 @@ export const PhotoUpload: React.FC<PhotoUploadProps> = ({ onUpload, imageUrl, is
 
   return (
     <div className="w-full mb-6">
-      <label className="label">Business Photo</label>
+      <label className="label">{label || 'Business Photo'}</label>
       <div 
         className={cn(
           "relative w-full aspect-video rounded-airbnb-lg border-2 border-dashed border-border overflow-hidden flex flex-col items-center justify-center transition-all duration-200 bg-background-secondary",
