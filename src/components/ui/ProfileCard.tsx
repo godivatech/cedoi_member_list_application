@@ -72,7 +72,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             <div className="pt-4 md:pt-6 mt-4 md:mt-6 border-t border-gray-100">
               <div className="flex items-center text-[10px] md:text-xs text-gray-400 font-medium">
                 <Calendar size={12} className="mr-1.5 shrink-0" />
-                <span className="truncate">Joined: {item.submittedAt?.toDate ? item.submittedAt.toDate().toLocaleDateString() : '31/03/2026'}</span>
+                <span className="truncate">Created: {item.submittedAt?.toDate ? item.submittedAt.toDate().toLocaleDateString() : '31/03/2026'}</span>
               </div>
             </div>
           </div>
