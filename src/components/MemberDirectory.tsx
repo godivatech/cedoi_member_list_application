@@ -28,7 +28,7 @@ export const MemberDirectory: React.FC = () => {
         const nameB = b.businessName?.toLowerCase() || '';
         const isAGodiva = nameA.includes('godiva');
         const isBGodiva = nameB.includes('godiva');
-        
+
         if (isAGodiva && !isBGodiva) return -1;
         if (!isAGodiva && isBGodiva) return 1;
         return 0;
