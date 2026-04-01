@@ -10,7 +10,10 @@ import { Download, Search, Lock, LogOut, X, Edit2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProfileCard } from './ui/ProfileCard';
+import { Pagination } from './ui/Pagination';
 import { EditBusinessForm } from './EditBusinessForm';
+
+const ITEMS_PER_PAGE = 10;
 
 export const AdminDashboard: React.FC = () => {
   const [submissions, setSubmissions] = useState<MemberApplication[]>([]);
@@ -20,6 +23,7 @@ export const AdminDashboard: React.FC = () => {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState(false);
   const [selectedItem, setSelectedItem] = useState<MemberApplication | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [editingItem, setEditingItem] = useState<MemberApplication | null>(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
 
@@ -109,6 +113,17 @@ export const AdminDashboard: React.FC = () => {
     s.service?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
   // --- LOGIN SCREEN ---
   if (!isAuthorized && !loading) {
     return (
@@ -197,10 +212,10 @@ export const AdminDashboard: React.FC = () => {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={20} />
         <input
           type="text"
-          placeholder="Search by business name, owner, or phone..."
-          className="input-field pl-10 h-12"
+          placeholder="Search submissions..."
+          className="input-field pl-12 h-14"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
         />
       </div>
 
@@ -208,7 +223,7 @@ export const AdminDashboard: React.FC = () => {
         {filteredData.length === 0 ? (
           <div className="text-center py-12 text-text-secondary">No submissions found.</div>
         ) : (
-          filteredData.map((item) => (
+          paginatedData.map((item) => (
             <div key={item.id} className="relative">
               <ProfileCard
                 item={item}
@@ -232,6 +247,13 @@ export const AdminDashboard: React.FC = () => {
           ))
         )}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        className="mt-12"
+      />
 
       {/* Modal for Full Item Details */}
       <AnimatePresence>

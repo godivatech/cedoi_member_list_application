@@ -6,12 +6,16 @@ import { Spinner } from './ui/Spinner';
 import { Search, X, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ProfileCard } from './ui/ProfileCard';
+import { Pagination } from './ui/Pagination';
+
+const ITEMS_PER_PAGE = 10;
 
 export const MemberDirectory: React.FC = () => {
   const [submissions, setSubmissions] = useState<MemberApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItem, setSelectedItem] = useState<MemberApplication | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [showCopyTooltip, setShowCopyTooltip] = useState<string | null>(null);
 
   useEffect(() => {
@@ -73,6 +77,17 @@ export const MemberDirectory: React.FC = () => {
     s.service?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
   if (loading) return <div className="min-h-[60vh] flex items-center justify-center"><Spinner size={40} /></div>;
 
   return (
@@ -94,7 +109,7 @@ export const MemberDirectory: React.FC = () => {
           placeholder="Search by business name, owner, or category..."
           className="input-field pl-12 h-14 text-lg shadow-sm"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
         />
       </div>
 
@@ -104,7 +119,7 @@ export const MemberDirectory: React.FC = () => {
             <p className="text-text-secondary font-medium">No members found matching your search.</p>
           </div>
         ) : (
-          filteredData.map((item) => (
+          paginatedData.map((item) => (
             <div key={item.id} className="relative">
               <ProfileCard
                 item={item}
@@ -128,6 +143,13 @@ export const MemberDirectory: React.FC = () => {
           ))
         )}
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        className="mt-12"
+      />
 
       {/* Modal for Full Item Details */}
       <AnimatePresence>
