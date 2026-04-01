@@ -78,13 +78,28 @@ export const AdminDashboard: React.FC = () => {
     XLSX.writeFile(workbook, `Business_Listing_Export_${new Date().toLocaleDateString()}.xlsx`);
   };
 
-  const handleShare = (e: React.MouseEvent, id: string) => {
+  const handleShare = async (e: React.MouseEvent, item: MemberApplication) => {
     e.stopPropagation();
-    const shareUrl = `${window.location.origin}/share/${id}`;
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      setShowCopyTooltip(id);
-      setTimeout(() => setShowCopyTooltip(null), 2000);
-    });
+    const shareUrl = `${window.location.origin}/share/${item.id}`;
+    const shareData = {
+      title: item.businessName || 'Member Profile',
+      text: `Check out ${item.businessName} on Cedoi Madurai Member Directory.`,
+      url: shareUrl,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        setShowCopyTooltip(item.id);
+        setTimeout(() => setShowCopyTooltip(null), 2000);
+      }
+    } catch (err) {
+      if (err instanceof Error && err.name !== 'AbortError') {
+        console.error('Share error:', err);
+      }
+    }
   };
 
   const filteredData = submissions.filter(s =>
@@ -198,7 +213,7 @@ export const AdminDashboard: React.FC = () => {
               <ProfileCard
                 item={item}
                 onClick={() => setSelectedItem(item)}
-                onShare={(e) => handleShare(e, item.id)}
+                onShare={(e) => handleShare(e, item)}
                 showShare={true}
               />
               <AnimatePresence>
