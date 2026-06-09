@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Cedoi Madurai</string>
+    <string name="title_activity_main">Cedoi Madurai</string>
+    <string name="package_name">com.godivatech.cedoimadurai</string>
+    <string name="custom_url_scheme">com.godivatech.cedoimadurai</string>
+</resources>
